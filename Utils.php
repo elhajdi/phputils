@@ -1,5 +1,4 @@
 <?php
-use Phalcon\Di;
 
 /**
  * gather all necessary functions
@@ -151,58 +150,6 @@ class Utils
     }
 
     /**
-     * get countries list or country given by its CCA2
-     * @return array       list
-     */
-    public static function getAllCountries()
-    {
-        $di        = Di::getDefault();
-        $cache     = $di->getCache();
-        $cache_key = md5('getAllCountries');
-        if(function_exists('apc_fetch')) {
-            $data      = $cache->get($cache_key);
-            if ($data) {
-                return $data;
-            }
-        }
-        $config    = $di->getConfig();
-        $countries = new Phalcon\Config\Adapter\Json($config->countries_data);
-        if(function_exists('apc_fetch')) {
-            $cache->save($cache_key, $countries);
-        }
-
-        return $countries;
-    }
-
-    /**
-     * get countries list or country given by its CCA2
-     * @param  string $code  iso code CCA2
-     * @return array      one country
-     */
-    public static function getCountryByCode($code)
-    {
-        if (!$code) {
-            return array();
-        }
-
-        $cache     = Di::getDefault()->getCache();
-        if(function_exists('apc_fetch')) {
-            $cache_key = md5('getCountryByCode-' . $code);
-            $data      = $cache->get($cache_key);
-            if ($data) {
-                return $data;
-            }
-        }
-        $countries = self::getAllCountries();
-        $country   = $countries[$code];
-        if(function_exists('apc_fetch')) {
-            $cache->save($cache_key, $country);
-        }
-
-        return $country;
-    }
-
-    /**
      * check if string (haystack) starts with ($needle)
      * @param  string $haystack
      * @param  string $needle
@@ -225,11 +172,13 @@ class Utils
         // search forward starting from end minus needle length characters
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
     }
+    
     /**
-     * crop Image
-     * @param  string $path [description]
+     * this method works use phalconphp code
+     * crop Image, 
+     * @param  string $path image path
      * @param  array  $size width, heigth, offsetX, offsetY
-     * @return bool       true if is OK
+     * @return bool     true if is OK
      */
     public static function cropImage($path, $size, $action = 'crop')
     {
@@ -324,13 +273,15 @@ class Utils
         
         return join(' ', $ret);
     }
-
+    
+    /**
+     * load zip codes
+     * @param  int $time seconde
+     * @return string  elapsed time (humain form)
+     */
     public static function loadzipcodes()
     {
-        // $di        = Di::getDefault();
-        // $config    = $di->getConfig();
-        // $zips = new Phalcon\Config\Adapter\Json(APP_PATH . "/app/data/zips.json");
-        $zips = json_decode(file_get_contents(APP_PATH . "/app/data/zips.json"), true);
+        $zips = json_decode(file_get_contents(APP_PATH . "/data/zips.json"), true);
 
         return $zips;
     }
