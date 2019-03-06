@@ -243,7 +243,7 @@ class Utils
     }
 
     /**
-     * time Elapsed
+     * time Elapsed between now and the specified time 
      * @param  int $time seconde
      * @return string  elapsed time (humain form)
      */
@@ -275,18 +275,7 @@ class Utils
     }
     
     /**
-     * load zip codes
-     * @param  int $time seconde
-     * @return string  elapsed time (humain form)
-     */
-    public static function loadzipcodes()
-    {
-        $zips = json_decode(file_get_contents(APP_PATH . "/data/zips.json"), true);
-
-        return $zips;
-    }
-    /**
-     * strip_desc_tags
+     * strip description tags
      * @param  string $str
      * @param  string $tag
      * @return string
@@ -307,5 +296,19 @@ class Utils
             '\n',
         ];
         return preg_replace($pattern, $replacement, $str);
+    }
+    
+   /**
+     * generate Acronym of string
+     * @param  string $string
+     * @return string extracted acronym
+     */
+    public static function generateAcronym(string $string)
+    {
+        $acronym = '';
+        if(preg_match_all('/\b(\w)/',strtoupper($string),$m)) {
+            $acronym = implode('',$m[1]); // $v is now SOQTU
+        }
+        return $acronym;
     }
 }
