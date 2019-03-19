@@ -157,10 +157,11 @@ class Utils
      * @param  string $needle
      * @return string
      */
-    public static function startsWith($haystack, $needle)
+    public static function startsWith($haystack, $needle, $case_sens = true)
     {
+        $strpos = $case_sens ? 'strrpos': 'strripos';
         // search backwards starting from haystack length characters from the end
-        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
+        return $needle === "" || $strpos($haystack, $needle, -strlen($haystack)) !== false;
     }
 
     /**
@@ -169,10 +170,11 @@ class Utils
      * @param  string $needle
      * @return string
      */
-    public static function endsWith($haystack, $needle)
+    public static function endsWith($haystack, $needle, $case_sens = true)
     {
+        $strpos = $case_sens ? 'strpos': 'stripos';
         // search forward starting from end minus needle length characters
-        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && $strpos($haystack, $needle, $temp) !== false);
     }
     
     /**
